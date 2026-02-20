@@ -41,11 +41,6 @@ const Game = (function() {
     let currentPlayer;
     let gameOver = false;
 
-    // const player1 = createPlayer("M", "X"); 
-    // const player2 = createPlayer("AI", "O"); 
-    // let currentPlayer = player1; 
-    // let gameOver = false;
-
     const startGame = (name1, name2) => {
         player1 = createPlayer(name1, "X");
         player2 = createPlayer(name2, "O");
@@ -53,7 +48,7 @@ const Game = (function() {
     }
 
     const playRound = (index) => {
-        if (!player1 || !player2) return;
+        if (!player1 || !player2) return { status: "not-started" };
 
         if (gameOver) return;
 
@@ -123,24 +118,109 @@ const Game = (function() {
 })();
 
 const DisplayController = (function() {
+    const container = document.querySelector('.square-container')
+    const squares = document.querySelectorAll(".square");
+    const startBtn = document.getElementById("start-btn");
+    const restartBtn = document.getElementById("restart-btn");
+    const nameDialog = document.getElementById("nameDialog");
+    const resultDialog = document.getElementById('resultDialog');
+    const turnBanner = document.getElementById('turn-banner');
+    const turnIndicator = document.getElementById('turn-indicator');
+    const turnText = document.getElementById('turn-text');
+    const playAgainBtn = document.getElementById('play-again-btn');
+    const changePlayersBtn = document.getElementById('change-players-btn');
 
+    window.addEventListener('DOMContentLoaded', () => {
+        nameDialog.showModal();
+    });
 
+    const handleWin = (name) => {
+        container.classList.add('disabled-div');
 
+        setTimeout(() => {
+            document.getElementById('result-emoji').textContent = '🏆';
+            document.getElementById('result-title').textContent = `${name} Wins!`;
+            document.getElementById('result-sub').textContent = `${name} takes the round!`;
+            resultDialog.showModal();
+        }, 600);
+    }
+
+    function handleDraw() {
+        container.classList.add('disabled-div');
+
+        setTimeout(() => {
+            document.getElementById('result-emoji').textContent = '🤝';
+            document.getElementById('result-title').textContent = "It's a Draw!";
+            document.getElementById('result-sub').textContent = 'Nobody wins this round.';
+            resultDialog.showModal();
+        }, 400);
+    }
+
+    startBtn.addEventListener('click', () => {
+        const name1 = document.getElementById('player-1').value.trim() || 'Player 1';
+        const name2 = document.getElementById('player-2').value.trim() || 'Player 2';
+
+        Game.startGame(name1, name2);
+
+        nameDialog.close();
+        squares.forEach(square => square.textContent = "");
+        updateTurnBanner();
+        container.classList.remove("disabled-div");
+    })
+    
+    const updateTurnBanner = () => {
+        const player = Game.getCurrentPlayer();
+        
+        const isX = player.marker === 'X';
+        turnBanner.className = 'turn-banner ' + (isX ? 'x-turn' : 'o-turn');
+        turnIndicator.textContent = isX ? '✕' : '○';
+        turnText.textContent = `${player.name}'s turn`;
+    }
+
+    squares.forEach((square, index) => {
+        square.addEventListener('click', () => {
+            const player = Game.getCurrentPlayer();
+            const result = Game.playRound(index);
+
+            if (!result || result.status === 'invalid') return;
+
+            square.textContent = player.marker;
+
+            if (result.status === 'win') {
+                handleWin(result.winner.name);
+            } else if (result.status === 'tie') {
+                handleDraw();
+            } else {
+                updateTurnBanner();
+            }
+        })
+    })
+
+    restartBtn.addEventListener('click', () => {
+        Game.resetGame();
+        nameDialog.showModal();
+        document.getElementById('player-1').value = "";
+        document.getElementById('player-2').value = "";
+    })
+
+    playAgainBtn.addEventListener('click', () => {
+        const name1 = document.getElementById('player-1').value.trim();
+        const name2 = document.getElementById('player-2').value.trim();
+
+        Game.startGame(name1, name2);
+        container.classList.remove("disabled-div");
+        
+        resultDialog.close();
+        squares.forEach(square => square.textContent = "");
+        updateTurnBanner();
+    })
+
+    changePlayersBtn.addEventListener('click', () => {
+        document.getElementById('player-1').value = "";
+        document.getElementById('player-2').value = "";
+
+        resultDialog.close();
+        nameDialog.showModal();
+    })
 })();
 
-console.log(Game.playRound(4))
-
-
-// const testBoard = ['', 'O', '',
-//                    '', 'O', '',
-//                    'X', '', 'X'];
-
-// const testCheckTie = () => {
-//     const hasEmpty = testBoard.some(item => item === "");
-
-//     if (hasEmpty) { return false }
-//     else { return true }
-// }
-
-// // console.log('Hello')
-// console.log(testCheckTie())

@@ -3,10 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    
+    <main>
+        <header>
+            <h1>TIC<span>TAC</span>TOE</h1>
+        </header>
+
+        <div class="turn-banner" id="turn-banner">
+            <span id="turn-indicator"></span>
+            <span id="turn-text">Waiting...</span>
+        </div>
+
+        <section class="game-section">
+            <div class="square-container" id="square-container">
+                <div class="square" data-index="0"></div>
+                <div class="square" data-index="1"></div>
+                <div class="square" data-index="2"></div>
+                <div class="square" data-index="3"></div>
+                <div class="square" data-index="4"></div>
+                <div class="square" data-index="5"></div>
+                <div class="square" data-index="6"></div>
+                <div class="square" data-index="7"></div>
+                <div class="square" data-index="8"></div>
+            </div>
+        </section>
+
+        <section class="button-section">
+            <button id="restart-btn" class="btn-restart">↺ Restart</button>
+        </section>
+    </main>
+
+    <!-- Player Name Dialog -->
+    <dialog id="nameDialog">
+        <div class="dialog-inner">
+            <h2>Let's Play!</h2>
+            <p class="dialog-sub">Enter your names to begin</p>
+            <div class="input-group">
+                <div class="input-wrap x-wrap">
+                    <span class="input-symbol x-color">✕</span>
+                    <input type="text" id="player-1" class="player-name" placeholder="Player 1" maxlength="12">
+                </div>
+                <div class="vs-badge">VS</div>
+                <div class="input-wrap o-wrap">
+                    <span class="input-symbol o-color">○</span>
+                    <input type="text" id="player-2" class="player-name" placeholder="Player 2" maxlength="12">
+                </div>
+            </div>
+            <button id="start-btn" class="btn-start">Start Game</button>
+        </div>
+    </dialog>
+
+    <!-- Result Dialog -->
+    <dialog id="resultDialog">
+        <div class="dialog-inner">
+            <div class="result-emoji" id="result-emoji">🏆</div>
+            <h2 id="result-title">Player 1 Wins!</h2>
+            <p class="dialog-sub" id="result-sub">Well played!</p>
+            <div class="result-btns">
+                <button id="play-again-btn" class="btn-start">Play Again</button>
+                <button id="change-players-btn" class="btn-outline">Change Players</button>
+            </div>
+        </div>
+    </dialog>
 
     <script src="./script.js"></script>
 </body> 
