@@ -113,8 +113,9 @@ const Game = (function() {
 
     const getCurrentPlayer = () => currentPlayer;
     const isGameOver = () => gameOver;
+    const getPlayers = () => ({ player1, player2 });
 
-    return { startGame, playRound, resetGame, getCurrentPlayer, isGameOver }
+    return { startGame, playRound, resetGame, getCurrentPlayer, isGameOver, getPlayers }
 })();
 
 const DisplayController = (function() {
@@ -204,8 +205,8 @@ const DisplayController = (function() {
     })
 
     playAgainBtn.addEventListener('click', () => {
-        const name1 = document.getElementById('player-1').value.trim();
-        const name2 = document.getElementById('player-2').value.trim();
+        const name1 = Game.getPlayers().player1.name;
+        const name2 = Game.getPlayers().player2.name;
 
         Game.startGame(name1, name2);
         container.classList.remove("disabled-div");
